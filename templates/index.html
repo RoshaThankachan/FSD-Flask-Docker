@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Flask Website</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Welcome to My Flask Website</h1>
+        <p>Your journey to web development starts here.</p>
+
+        <!-- Existing Button -->
+        <a href="#" class="btn">Get Started</a>
+
+        <!-- NEW Redirect Button -->
+        <a href="{{ url_for('about') }}" class="btn" style="margin-left:10px; background:#1cc88a;">
+            Go to About Page
+        </a>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features">
+        <h2>Our Features</h2>
+
+        <div class="feature-boxes">
+            <div class="box">
+                <h3>⚡ Fast</h3>
+                <p>Flask apps load quickly and are easy to manage.</p>
+            </div>
+
+            <div class="box">
+                <h3>🎨 Simple Design</h3>
+                <p>Clean and modern UI with simple HTML & CSS.</p>
+            </div>
+
+            <div class="box">
+                <h3>🧪 Easy to Code</h3>
+                <p>Flask lets you build powerful apps with very few lines.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 My Flask Website. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
