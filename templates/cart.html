@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping Cart - DressShop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="css/main.css">
+
+  <style>
+    .cart-container {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-top: 40px;
+      border: 1px solid var(--glass-border);
+    }
+
+    .qty-box {
+      width: 70px;
+      border-radius: 8px;
+    }
+
+    .checkout-bar {
+      margin-top: 30px;
+      background: var(--secondary-color);
+      color: #000;
+      padding: 18px;
+      border-radius: 15px;
+      font-size: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-md);
+    }
+  </style>
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <span class="material-icons me-2 text-primary-custom">shopping_bag</span> DressShop
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Shop</a></li>
+          <li class="nav-item"><a class="nav-link active" href="cart.html"><span class="material-icons">shopping_cart</span></a></li>
+          <li class="nav-item" id="authLink">
+             <!-- JS will populate this -->
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <div class="bg-primary text-white py-5 mb-5 text-center" style="background: linear-gradient(135deg, var(--secondary-color), #018786);">
+    <h1 class="display-4 fw-bold text-dark">Your Shopping Cart</h1>
+    <p class="lead text-dark">Review your items and checkout</p>
+  </div>
+
+  <!-- CART CONTENT -->
+  <div class="container mb-5">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card shadow-lg glass-card fade-in mb-4">
+          <div class="card-body p-4" id="cartContainer">
+            <!-- Cart Items Rendered Here -->
+            <div class="text-center py-5">
+               <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4">
+        <div class="card shadow-lg glass-card fade-in sticky-top" style="top: 90px;">
+          <div class="card-body p-4">
+            <h4 class="card-title fw-bold mb-4">Order Summary</h4>
+            <div class="d-flex justify-content-between mb-3">
+              <span>Subtotal</span>
+              <span id="totalAmountDisplay" class="fw-bold">₹0</span>
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+              <span>Shipping</span>
+              <span class="text-success">Free</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between mb-4">
+              <span class="h5 fw-bold">Total</span>
+              <span class="h5 fw-bold text-primary" id="finalTotal">₹0</span>
+            </div>
+            <button class="btn btn-success w-100 py-3 material-shadow" onclick="checkout()">
+              Proceed to Checkout
+            </button>
+            <a href="products.html" class="btn btn-outline-secondary w-100 mt-2">Continue Shopping</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="text-center">
+    <p class="mb-0">&copy; 2025 DressShop. All Rights Reserved.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    // Simple auth check for navbar
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const authLink = document.getElementById('authLink');
+    if(user) {
+      authLink.innerHTML = `<button class="btn btn-sm btn-outline-danger ms-2" onclick="logout()">Logout</button>`;
+    } else {
+      authLink.innerHTML = `<a href="login.html" class="btn btn-sm btn-primary ms-2">Login</a>`;
+    }
+    
+    function logout() {
+      localStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
+    }
+    
+    // Update final total when totalAmountDisplay changes (using MutationObserver or just polling/event)
+    // Since we control js/cart.js, we can just update it there. 
+    // But for now, let's just make sure js/cart.js updates both or we handle it here.
+    // Wait, cart.js updates `totalAmountDisplay`. I added `finalTotal` here. I should update cart.js to update `finalTotal` too or just use one ID.
+    // I'll update this HTML to use `totalAmountDisplay` for the final total as well, or just let it be.
+    // Let's just use `totalAmountDisplay` for both or update cart.js.
+    // Easier to just use `totalAmountDisplay` in the summary and maybe remove the subtotal breakdown for simplicity or duplicate the ID (bad practice).
+    // Better: I will add a small script to sync them or just update cart.js.
+    // Let's update cart.js to update 'finalTotal' if it exists.
+    
+    // Actually, I'll just use the same ID for the main total.
+  </script>
+  <script>
+    // Sync final total
+    setInterval(() => {
+       const total = document.getElementById('totalAmountDisplay');
+       const final = document.getElementById('finalTotal');
+       if(total && final) final.innerText = total.innerText;
+    }, 500);
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products - DressShop Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="admin-home.html">
+                <span class="material-icons me-2 text-primary-custom">admin_panel_settings</span> DressShop Admin
+            </a>
+            <div class="d-flex gap-2">
+                <a class="btn btn-primary" href="add-product.html">
+                    <span class="material-icons" style="font-size: 18px; vertical-align: middle;">add</span> Add Product
+                </a>
+                <button onclick="logout()" class="btn btn-outline-danger">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">Product Management</h2>
+            <div class="input-group w-25">
+                <span class="input-group-text bg-white"><span class="material-icons">search</span></span>
+                <input type="text" id="adminSearch" class="form-control" placeholder="Search products...">
+            </div>
+        </div>
+
+        <div class="card shadow-lg glass-card fade-in">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminProductTable">
+                            <!-- Rendered by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="noProductsMsg" class="text-center mt-5" style="display:none;">
+            <p class="text-muted">No products found.</p>
+        </div>
+    </div>
+
+    <script src="js/products.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (!isAdmin()) { window.location = "login.html"; }
+
+            const products = getProducts();
+            const tableBody = document.getElementById('adminProductTable');
+            const searchInput = document.getElementById('adminSearch');
+
+            function renderTable(list) {
+                tableBody.innerHTML = '';
+                if (list.length === 0) {
+                    document.getElementById('noProductsMsg').style.display = 'block';
+                    return;
+                }
+                document.getElementById('noProductsMsg').style.display = 'none';
+
+                list.forEach(p => {
+                    let imgPath = p.photo && p.photo !== "" ? p.photo : 'https://via.placeholder.com/50';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+            <td class="ps-4">
+              <div class="d-flex align-items-center">
+                <img src="${imgPath}" class="rounded me-3 shadow-sm" width="50" height="50" style="object-fit:cover;">
+                <div>
+                  <div class="fw-bold">${p.name}</div>
+                  <div class="small text-muted">ID: ${p.id}</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="badge bg-secondary">${p.category || 'Uncategorized'}</span></td>
+            <td class="fw-bold">₹${p.price}</td>
+            <td class="text-end pe-4">
+              <a href="edit-product.html?id=${p.id}" class="btn btn-sm btn-outline-primary me-2">
+                <span class="material-icons" style="font-size: 18px; vertical-align: middle;">edit</span> Edit
+              </a>
+              <button onclick="deleteProd('${p.id}')" class="btn btn-sm btn-outline-danger">
+                <span class="material-icons" style="font-size: 18px; vertical-align: middle;">delete</span>
+              </button>
+            </td>
+          `;
+                    tableBody.appendChild(tr);
+                });
+            }
+
+            renderTable(products);
+
+            // Search functionality
+            searchInput.addEventListener('input', function (e) {
+                const term = e.target.value.toLowerCase();
+                const filtered = products.filter(p => p.name.toLowerCase().includes(term));
+                renderTable(filtered);
+            });
+
+            window.deleteProd = function (id) {
+                if (confirm("Are you sure you want to delete this product?")) {
+                    let products = getProducts();
+                    const updated = products.filter(p => String(p.id).trim() !== String(id).trim());
+                    setProducts(updated);
+                    alert("Product deleted!");
+                    renderTable(updated);
+                }
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location = "login.html";
+        }
+    </script>
+</body>
+
+</html>
